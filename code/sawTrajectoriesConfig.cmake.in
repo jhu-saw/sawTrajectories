@@ -1,0 +1,14 @@
+#
+# $Id: sawTrajectoriesConfig.cmake.in 3012 2011-10-06 15:17:27Z adeguet1 $
+
+# Author(s):  Anton Deguet
+# Created on: 2011-01-20
+#
+# (C) Copyright 2011 Johns Hopkins University (JHU), All Rights
+# Reserved.
+#
+
+
+set (sawTrajectories_INCLUDE_DIR "@sawTrajectories_INCLUDE_DIR@")
+set (sawTrajectories_LIBRARY_DIR "@sawTrajectories_LIBRARY_DIR@")
+set (sawTrajectories_LIBRARIES   "@sawTrajectories_LIBRARIES@")
