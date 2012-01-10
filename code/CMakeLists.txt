@@ -31,6 +31,7 @@ if( cisst_FOUND )
 
   
   add_library( sawTrajectories ${HEADER_FILES} ${SOURCE_FILES} )
+  set_property (TARGET sawTrajectories PROPERTY FOLDER "sawTrajectories")
   cisst_target_link_libraries( sawTrajectories ${REQUIRED_CISST_LIBRARIES} )
 
   # create/configure file for find_package (sawNDITracker)

@@ -17,7 +17,9 @@ if( cisst_FOUND AND sawTrajectories_FOUND )
   include( ${CISST_USE_FILE} )
 
   add_executable(osaIKExample         osaIKExample.cpp )
+  set_property (TARGET osaIKExample PROPERTY FOLDER "sawTrajectories")
   add_executable(mtsTrajectoryExample mtsTrajectoryExample.cpp )
+  set_property (TARGET mtsTrajectoryExample PROPERTY FOLDER "sawTrajectories")
 
   target_link_libraries( osaIKExample          sawTrajectories )
   target_link_libraries( mtsTrajectoryExample  sawTrajectories sawKeyboard )
