@@ -44,4 +44,16 @@ if( cisst_FOUND )
     "${sawComponents_BINARY_DIR}/sawTrajectoriesConfig.cmake"
     @ONLY@ )
 
+  # Install targets for headers and library
+  install( FILES ${HEADER_FILES}
+    DESTINATION include/sawTrajectories)
+
+  install( TARGETS sawTrajectories
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+
+  install( FILES "${sawComponents_BINARY_DIR}/sawTrajectoriesConfig.cmake"
+    DESTINATION ${CISST_CMAKE_MODULES_INSTALL_SUFFIX}/components)
+
 endif( cisst_FOUND )

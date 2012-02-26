@@ -118,11 +118,10 @@ void mtsTrajectory::Run(){
       catch( ... )
 	{ std::cout << "CAUGHT!" << std::endl; }
 
-      vctQuaternionRotation3<double> R( Rt.Rotation(), VCT_NORMALIZE );
-      vctFrm3 frm3( R, Rt.Translation() );
-      Rtout.Position() = frm3;
+      vctFrm3 frm3(static_cast<vctRot3>(Rt.Rotation()),Rt.Translation()); // This breaks without the static cast. Blame cisstParameterTypes.
+      Rtout.SetPosition(frm3);
 
-      qout.Position() = q;
+      qout.SetPosition(q);
 
     }
     

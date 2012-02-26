@@ -9,25 +9,33 @@ set(
   cisstNumerical )
 
 find_package( cisst REQUIRED ${REQUIRED_CISST_LIBRARIES} )
-find_package(sawTrajectories REQUIRED HINTS "${cisst_saw_BINARY_DIR}/saw/components")
 
-if( cisst_FOUND AND sawTrajectories_FOUND )
+if( cisst_FOUND )
 
   # load cisst configuration
   include( ${CISST_USE_FILE} )
 
-  add_executable(osaIKExample         osaIKExample.cpp )
-  set_property (TARGET osaIKExample PROPERTY FOLDER "sawTrajectories")
-  add_executable(mtsTrajectoryExample mtsTrajectoryExample.cpp )
-  set_property (TARGET mtsTrajectoryExample PROPERTY FOLDER "sawTrajectories")
+  cisst_find_component(sawTrajectories REQUIRED )
+  cisst_find_component(sawKeyboard REQUIRED )
 
-  target_link_libraries( osaIKExample          sawTrajectories )
-  target_link_libraries( mtsTrajectoryExample  sawTrajectories sawKeyboard )
+  if( sawTrajectories_FOUND AND sawKeyboard_FOUND)
 
-  cisst_target_link_libraries(osaIKExample         ${REQUIRED_CISST_LIBRARIES} )
-  cisst_target_link_libraries(mtsTrajectoryExample ${REQUIRED_CISST_LIBRARIES} )
+    link_directories(${sawKeyboard_LIBRARY_DIR})
 
-endif( cisst_FOUND AND sawTrajectories_FOUND )
+    add_executable(osaIKExample         osaIKExample.cpp )
+    set_property (TARGET osaIKExample PROPERTY FOLDER "sawTrajectories")
+    add_executable(mtsTrajectoryExample mtsTrajectoryExample.cpp )
+    set_property (TARGET mtsTrajectoryExample PROPERTY FOLDER "sawTrajectories")
+
+    target_link_libraries( osaIKExample          sawTrajectories )
+    target_link_libraries( mtsTrajectoryExample  sawTrajectories sawKeyboard )
+
+    cisst_target_link_libraries(osaIKExample         ${REQUIRED_CISST_LIBRARIES} )
+    cisst_target_link_libraries(mtsTrajectoryExample ${REQUIRED_CISST_LIBRARIES} )
+
+  endif( sawTrajectories_FOUND AND sawKeyboard_FOUND )
+
+endif( cisst_FOUND  )
 
 
 
