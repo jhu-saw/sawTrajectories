@@ -1,4 +1,5 @@
 #include <sawTrajectories/osaTrajectory.h>
+#include <cisstCommon/cmnPath.h>
 #include <cisstOSAbstraction/osaSleep.h>
 
 int main( int, char** ){
@@ -14,10 +15,13 @@ int main( int, char** ){
   qinit[3] =  cmnPI;
   qinit[5] = -cmnPI_2;
 
-  std::string path( CISST_SOURCE_ROOT"/cisst/etc/cisstRobot/WAM/" ); 
-  osaTrajectory trajectory( path+"wam7.rob", Rtw0, qinit );
+  cmnPath path;
+  path.AddRelativeToCisstShare("/models/WAM");
+  std::string fname = path.Find("wam7.rob");
 
-  robManipulator manipulator( path+"wam7.rob", Rtw0 );
+  osaTrajectory trajectory( fname, Rtw0, qinit );
+
+  robManipulator manipulator( fname, Rtw0 );
 
   vctDynamicVector<double> q( qinit );
 

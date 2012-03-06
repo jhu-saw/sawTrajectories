@@ -1,19 +1,21 @@
 #include <sawKeyboard/mtsKeyboard.h>
 #include <sawTrajectories/mtsTrajectory.h>
 
+#include <cisstCommon/cmnPath.h>
+
 #include <cisstMultiTask/mtsInterfaceRequired.h>
 #include <cisstMultiTask/mtsTaskManager.h>
 
 //#include <cisstParameterTypes/prmPositionJointGet.h>
 //#include <cisstParameterTypes/prmForceTorqueJointSet.h>
 
-#include <native/task.h>
-#include <sys/mman.h>
+// #include <native/task.h>
+// #include <sys/mman.h>
 
 class SetPoints : public mtsTaskPeriodic {
 
 private:
-  
+
   robManipulator* manipulator;
 
   mtsFunctionWrite SetPositionCartesian;
@@ -24,10 +26,10 @@ private:
   double t;
 
 public:
-  
-  SetPoints( const std::string& robotfilename, 
+
+  SetPoints( const std::string& robotfilename,
 	     const vctFrame4x4<double>& Rtw0,
-	     const vctDynamicVector<double>& qinit ) : 
+	     const vctDynamicVector<double>& qinit ) :
     mtsTaskPeriodic( "setpoint", 0.1, true ),
     manipulator( NULL ),
     q( qinit ),
@@ -46,13 +48,13 @@ public:
       CMN_LOG_RUN_ERROR << "Failed to create interface Output for " << GetName()
 			<< std::endl;
     }
-    
+
   }
 
   void Configure( const std::string& ){}
   void Startup(){}
-  void Run(){ 
-    ProcessQueuedCommands(); 
+  void Run(){
+    ProcessQueuedCommands();
 
     t += GetPeriodicity();
     double dx = 0.1 * sin( t - cmnPI_2 ) + 0.1;
@@ -70,10 +72,11 @@ public:
 
 int main( int, char** ){
 
+    /*
   mlockall(MCL_CURRENT | MCL_FUTURE);
   RT_TASK task;
   rt_task_shadow( &task, "mtsWAMPDGCExample", 99, 0 );
-
+    */
   mtsTaskManager* taskManager = mtsTaskManager::GetInstance();
 
   cmnLogger::SetMask( CMN_LOG_ALLOW_ALL );
@@ -90,37 +93,39 @@ int main( int, char** ){
                                    1.0,  0.0,  0.0 );
   vctFixedSizeVector<double,3> tw0(0.0);
   vctFrame4x4<double> Rtw0( Rw0, tw0 );
-  
+
 
   vctDynamicVector<double> qinit( 7, 0.0 );
   qinit[1] = -cmnPI_2;
   qinit[3] =  cmnPI;
   qinit[5] = -cmnPI_2;
 
-  std::string path( CISST_SOURCE_ROOT"/cisst/etc/cisstRobot/WAM/" ); 
-  mtsTrajectory trajectory( "trajectory", 
+  cmnPath path;
+  path.AddRelativeToCisstShare("/models/WAM");
+  std::string fname = path.Find("wam7.rob");
+  mtsTrajectory trajectory( "trajectory",
 			    0.01,
-			    path+"wam7.rob", 
-			    Rtw0, 
+			    fname,
+			    Rtw0,
 			    qinit );
   taskManager->AddComponent( &trajectory );
 
-  SetPoints setpoints( path+"wam7.rob", Rtw0, qinit );
+  SetPoints setpoints( fname, Rtw0, qinit );
   taskManager->AddComponent( &setpoints );
-  
+
 
   taskManager->Connect( trajectory.GetName(), "Input",
 			setpoints.GetName(), "Output" );
 
   taskManager->CreateAll();
   taskManager->StartAll();
-  
+
   pause();
 
   taskManager->KillAll();
   taskManager->Cleanup();
-  
-  
+
+
 
   return 0;
 
