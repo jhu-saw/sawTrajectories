@@ -1,3 +1,17 @@
+#
+# $Id: CMakeLists.txt 3485 2012-02-26 06:08:41Z jbohren1 $
+#
+# (C) Copyright 2011-2012 Johns Hopkins University (JHU), All Rights
+# Reserved.
+#
+# --- begin cisst license - do not edit ---
+#
+# This software is provided "as is" under an open source license, with
+# no warranty.  The complete license can be found in license.txt and
+# http://www.cisst.org/cisst/license.txt.
+#
+# --- end cisst license ---
+
 set(
   REQUIRED_CISST_LIBRARIES
   cisstCommon
@@ -10,33 +24,33 @@ set(
 
 find_package( cisst REQUIRED ${REQUIRED_CISST_LIBRARIES} )
 
-if( cisst_FOUND )
+if( cisst_FOUND_AS_REQUIRED )
 
   # load cisst configuration
   include( ${CISST_USE_FILE} )
 
-  cisst_find_component(sawTrajectories REQUIRED )
-  cisst_find_component(sawKeyboard REQUIRED )
+  cisst_find_saw_component (sawTrajectories REQUIRED)
+  cisst_find_saw_component (sawKeyboard REQUIRED)
 
   if( sawTrajectories_FOUND AND sawKeyboard_FOUND)
 
-    link_directories(${sawKeyboard_LIBRARY_DIR})
+    include_directories (${sawKeyboard_INCLUDE_DIR} ${sawTrajectories_INCLUDE_DIR})
+    link_directories (${sawKeyboard_LIBRARY_DIR} ${sawTrajectories_LIBRARY_DIR})
 
-    add_executable(osaIKExample         osaIKExample.cpp )
-    set_property (TARGET osaIKExample PROPERTY FOLDER "sawTrajectories")
-    add_executable(mtsTrajectoryExample mtsTrajectoryExample.cpp )
-    set_property (TARGET mtsTrajectoryExample PROPERTY FOLDER "sawTrajectories")
+    set (sawTrajectories_EXAMPLES
+         osaIKExample
+         mtsTrajectoryExample)
 
-    target_link_libraries( osaIKExample          sawTrajectories )
-    target_link_libraries( mtsTrajectoryExample  sawTrajectories sawKeyboard )
+    foreach (_example ${sawTrajectories_EXAMPLES})
+      add_executable (${_example} ${_example}.cpp)
+      target_link_libraries (${_example} ${sawTrajectories_LIBRARIES})
+      cisst_target_link_libraries (${_example} ${REQUIRED_CISST_LIBRARIES})
+      set_property (TARGET ${_example} PROPERTY FOLDER "sawTrajectories")
+    endforeach ()
 
-    cisst_target_link_libraries(osaIKExample         ${REQUIRED_CISST_LIBRARIES} )
-    cisst_target_link_libraries(mtsTrajectoryExample ${REQUIRED_CISST_LIBRARIES} )
+    # examples that also need sawKeyboard
+    target_link_libraries (mtsTrajectoryExample ${sawKeyboard_LIBRARIES})
 
   endif( sawTrajectories_FOUND AND sawKeyboard_FOUND )
 
-endif( cisst_FOUND  )
-
-
-
-
+endif( cisst_FOUND_AS_REQUIRED )
