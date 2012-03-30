@@ -81,7 +81,7 @@ void mtsTrajectory::SetPositionCartesian( const mtsFrm4x4& mtsRt ){
 				     mtsRt[2][0], mtsRt[2][1], mtsRt[2][2], 
 				     VCT_NORMALIZE );
     vctFrame4x4<double> vctRt( vctR, mtsRt.Translation() );
-    if( trajectory->Insert( vctRt, 0.1 ) != osaTrajectory::ESUCCESS ){
+    if( trajectory->Insert( vctRt, 0.01 ) != osaTrajectory::ESUCCESS ){
       CMN_LOG_RUN_ERROR << "Failed to queue Cartesian position" << std::endl;
     }
   }
@@ -108,6 +108,7 @@ void mtsTrajectory::Run(){
   if( IsEnabled() ){
 
     if( trajectory ){
+
       
       t += GetPeriodicity();
 
@@ -122,7 +123,7 @@ void mtsTrajectory::Run(){
       Rtout.SetPosition(frm3);
 
       qout.SetPosition(q);
-
+      //std::cout << q << std::endl;
     }
     
     else

@@ -75,7 +75,7 @@ int main( int, char** ){
     /*
   mlockall(MCL_CURRENT | MCL_FUTURE);
   RT_TASK task;
-  rt_task_shadow( &task, "mtsWAMPDGCExample", 99, 0 );
+  rt_task_shadow( &task, "mtsTrajectoryExample", 20, 0 );
     */
   mtsTaskManager* taskManager = mtsTaskManager::GetInstance();
 
@@ -85,7 +85,7 @@ int main( int, char** ){
 
   mtsKeyboard kb;
   kb.SetQuitKey( 'q' );
-  //kb.AddKeyWriteFunction( 'G', "GCEnable", "Enable", true );
+  kb.AddKeyWriteFunction( 'E', "Enable", "Enable", true );
   taskManager->AddComponent( &kb );
 
   vctMatrixRotation3<double> Rw0(  0.0,  0.0, -1.0,
@@ -114,8 +114,11 @@ int main( int, char** ){
   taskManager->AddComponent( &setpoints );
 
 
+  taskManager->Connect( trajectory.GetName(), "Control",
+			kb.GetName(),         "Enable" );
+
   taskManager->Connect( trajectory.GetName(), "Input",
-			setpoints.GetName(), "Output" );
+			setpoints.GetName(),  "Output" );
 
   taskManager->CreateAll();
   taskManager->StartAll();
