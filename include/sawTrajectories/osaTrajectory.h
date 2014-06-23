@@ -7,7 +7,7 @@
   Author(s):  Simon Leonard
   Created on: 2012
 
-  (C) Copyright 2012-2013 Johns Hopkins University (JHU), All Rights
+  (C) Copyright 2012-2014 Johns Hopkins University (JHU), All Rights
   Reserved.
 
 --- begin cisst license - do not edit ---
@@ -72,6 +72,8 @@ private:
             inspace( is ),
             outspace( os ),
             duration( -1.0 ){}
+
+        virtual ~Segment() {}
 
         virtual osaTrajectory::Space  InputSpace() const { return inspace; }
         virtual osaTrajectory::Space  OutputSpace() const { return outspace; }
@@ -211,4 +213,4 @@ public:
 
 };
 
-#endif
+#endif // _osaTrajectory_h
