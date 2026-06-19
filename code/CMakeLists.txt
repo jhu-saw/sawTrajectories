@@ -1,8 +1,7 @@
 #
-# $Id: CMakeLists.txt 3485 2012-02-26 06:08:41Z jbohren1 $
+# CMakeLists.txt
 #
-# (C) Copyright 2011-2012 Johns Hopkins University (JHU), All Rights
-# Reserved.
+# (C) Copyright 2011-2026 Johns Hopkins University (JHU), All Rights Reserved.
 #
 # --- begin cisst license - do not edit ---
 #
@@ -29,7 +28,7 @@ if( cisst_FOUND )
   # load cisst configuration
   include (${CISST_USE_FILE})
 
-  # create/configure file for find_package (sawNDITracker)
+  # create/configure file for find_package
   set(sawTrajectories_INCLUDE_DIR "${sawTrajectories_SOURCE_DIR}/include")
   set(sawTrajectories_LIBRARY_DIR "${LIBRARY_OUTPUT_PATH}")
   set(sawTrajectories_LIBRARIES sawTrajectories)
@@ -55,7 +54,7 @@ if( cisst_FOUND )
   configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/sawTrajectoriesConfig.cmake.in"
     "${sawTrajectories_BINARY_DIR}/sawTrajectoriesConfig.cmake"
-    @ONLY@ )
+    @ONLY )
 
   # Install targets for headers and library
   install (DIRECTORY
