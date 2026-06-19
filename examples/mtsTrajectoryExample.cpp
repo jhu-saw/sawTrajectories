@@ -2,6 +2,7 @@
 #include <sawTrajectories/mtsTrajectory.h>
 
 #include <cisstCommon/cmnPath.h>
+#include <cisstCommon/cmnPortability.h>
 
 #include <cisstMultiTask/mtsInterfaceRequired.h>
 #include <cisstMultiTask/mtsTaskManager.h>
@@ -123,7 +124,11 @@ int main( int, char** ){
   taskManager->CreateAll();
   taskManager->StartAll();
 
+#if (CISST_OS == CISST_WINDOWS)
+  system("pause");
+#else
   pause();
+#endif
 
   taskManager->KillAll();
   taskManager->Cleanup();
